@@ -1,0 +1,22 @@
+name: Deploy AKS-Construction
+
+on:
+  workflow_dispatch:
+
+permissions:
+      id-token: write
+      contents: read
+
+jobs:
+  reusable_workflow_job:
+    uses: Azure/AKS-Construction/.github/workflows/AKSC_Deploy.yml@0.9.10
+    with:
+      templateVersion: 0.9.10
+      rg: az-k8s-newpae-rg
+      resourceName: az-k8s-newpae
+      templateParams: resourceName=az-k8s-newpae agentCount=2 agentCountMax=5 custom_vnet=true CreateNetworkSecurityGroups=true CreateNetworkSecurityGroupFlowLogs=true enable_aad=true AksDisableLocalAccounts=true enableAzureRBAC=true adminPrincipalId=_USER_OBJECT_ID_ registries_sku=Premium acrPushRolePrincipalId=_USER_OBJECT_ID_ enableACRTrustPolicy=true privateLinks=true omsagent=true retentionInDays=30 createAksMetricAlerts=false networkPolicy=azure azurepolicy=audit azurePolicyInitiative=Restricted cniDynamicIpAllocation=true podCidr=10.240.100.0/24 maxPods=250 enablePrivateCluster=true fileCSIDriver=false diskCSIDriver=false ingressApplicationGateway=true appGWcount=0 appGWsku=WAF_v2 appGWmaxCount=10 fluxGitOpsAddon=true daprAddon=true
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      USER_OBJECT_ID: ${{ secrets.USER_OBJECT_ID }}
